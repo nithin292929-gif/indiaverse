@@ -8,8 +8,8 @@ export default function TourDetail() {
   const [tour, setTour] = useState(null)
   const [loading, setLoading] = useState(true)
   const [booking, setBooking] = useState({
-    customer_name:'', customer_email:'',
-    customer_phone:'', travel_date:'', num_people:1
+    customer_name: '', customer_email: '',
+    customer_phone: '', travel_date: '', num_people: 1
   })
   const [submitted, setSubmitted] = useState(false)
 
@@ -29,77 +29,268 @@ export default function TourDetail() {
     }
   }
 
-  const inp = { width:'100%', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.2)', borderRadius:'12px', padding:'12px 16px', color:'white', fontSize:'1rem', outline:'none', boxSizing:'border-box' }
+  const inp = {
+    width: '100%', background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '12px', padding: '12px 16px',
+    color: 'white', fontSize: '0.95rem', outline: 'none',
+    boxSizing: 'border-box', marginBottom: '12px',
+  }
 
-  if (loading) return <div style={{ color:'white', textAlign:'center', paddingTop:'160px', fontSize:'1.5rem', background:'#050914', minHeight:'100vh' }}>Loading...</div>
-  if (!tour) return <div style={{ color:'white', textAlign:'center', paddingTop:'160px', background:'#050914', minHeight:'100vh' }}>Tour not found</div>
+  if (loading) return (
+    <div style={{ color: 'white', textAlign: 'center', paddingTop: '160px', background: '#06080f', minHeight: '100vh', fontSize: '1.2rem' }}>
+      Loading...
+    </div>
+  )
+  if (!tour) return (
+    <div style={{ color: 'white', textAlign: 'center', paddingTop: '160px', background: '#06080f', minHeight: '100vh' }}>
+      Tour not found
+    </div>
+  )
 
   return (
-    <div style={{ minHeight:'100vh', background:'#050914' }}>
-      {/* Hero */}
-      <div style={{ position:'relative', height:'400px' }}>
-        <img src={tour.image_url} alt={tour.title} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
-        <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.55)' }} />
-        <button onClick={() => navigate('/tours')} style={{ position:'absolute', top:'90px', left:'32px', background:'rgba(0,0,0,0.5)', color:'white', border:'none', padding:'10px 20px', borderRadius:'999px', cursor:'pointer' }}>
+    <div style={{ minHeight: '100vh', background: '#06080f' }}>
+      <style>{`
+        .detail-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 48px 24px;
+        }
+        .detail-hero { height: 420px; }
+        .detail-hero h1 { font-size: 2.2rem; }
+        .stats-row { display: flex; gap: 12px; }
+        @media (max-width: 768px) {
+          .detail-grid { grid-template-columns: 1fr !important; gap: 24px !important; padding: 24px 16px !important; }
+          .detail-hero { height: 260px !important; }
+          .detail-hero h1 { font-size: 1.4rem !important; }
+          .stats-row { flex-direction: column !important; }
+        }
+      `}</style>
+
+      {/* Hero Image */}
+      <div className="detail-hero" style={{ position: 'relative' }}>
+        <img
+          src={tour.image_url}
+          alt={tour.title}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} />
+
+        <button
+          onClick={() => navigate('/tours')}
+          style={{
+            position: 'absolute', top: '84px', left: '24px',
+            background: 'rgba(0,0,0,0.5)', color: 'white',
+            border: '1px solid rgba(255,255,255,0.2)',
+            padding: '8px 18px', borderRadius: '999px',
+            cursor: 'pointer', fontSize: '0.85rem',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
           ← Back
         </button>
-        <div style={{ position:'absolute', bottom:'32px', left:'32px' }}>
-          <span style={{ color:'#f97316', fontWeight:600, textTransform:'uppercase', fontSize:'0.8rem' }}>{tour.category}</span>
-          <h1 style={{ color:'white', fontSize:'2.5rem', fontWeight:'bold', margin:'8px 0 4px' }}>{tour.title}</h1>
-          <p style={{ color:'#d1d5db' }}>📍 {tour.location}, {tour.state}</p>
+
+        <div style={{ position: 'absolute', bottom: '24px', left: '24px', right: '24px' }}>
+          <span style={{
+            color: '#f47c3a', fontWeight: 600,
+            textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.1em'
+          }}>
+            {tour.category}
+          </span>
+          <h1 className="detail-hero" style={{
+            color: 'white', fontFamily: 'Playfair Display, serif',
+            fontWeight: 700, margin: '6px 0 4px', lineHeight: 1.2
+          }}>
+            {tour.title}
+          </h1>
+          <p style={{ color: '#d1d5db', fontSize: '0.9rem' }}>
+            📍 {tour.location}, {tour.state}
+          </p>
         </div>
       </div>
 
-      {/* Content */}
-      <div style={{ maxWidth:'1100px', margin:'0 auto', padding:'48px 24px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'48px' }}>
+      {/* Content Grid */}
+      <div className="detail-grid">
+
         {/* Info */}
         <div>
-          <div style={{ display:'flex', gap:'16px', marginBottom:'32px' }}>
+          {/* Stats Row */}
+          <div className="stats-row" style={{ marginBottom: '28px' }}>
             {[
-              { label:'Price', value:`₹${Number(tour.price).toLocaleString()}`, sub:'per person' },
-              { label:'Duration', value:tour.duration, sub:'' },
-              { label:'Rating', value:`⭐ ${tour.rating}`, sub:'' },
+              { label: 'Price', value: `₹${Number(tour.price).toLocaleString()}`, sub: 'per person', highlight: true },
+              { label: 'Duration', value: tour.duration, sub: '' },
+              { label: 'Rating', value: `⭐ ${tour.rating}`, sub: '' },
             ].map(item => (
-              <div key={item.label} style={{ flex:1, background:'rgba(255,255,255,0.05)', borderRadius:'16px', padding:'20px', textAlign:'center' }}>
-                <p style={{ color:'#9ca3af', fontSize:'0.85rem', marginBottom:'8px' }}>{item.label}</p>
-                <p style={{ color: item.label==='Price' ? '#f97316' : 'white', fontSize:'1.4rem', fontWeight:'bold' }}>{item.value}</p>
-                {item.sub && <p style={{ color:'#9ca3af', fontSize:'0.75rem' }}>{item.sub}</p>}
+              <div key={item.label} style={{
+                flex: 1,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '16px', padding: '16px',
+                textAlign: 'center'
+              }}>
+                <p style={{ color: '#8a8a9a', fontSize: '0.78rem', marginBottom: '6px' }}>{item.label}</p>
+                <p style={{
+                  color: item.highlight ? '#f47c3a' : 'white',
+                  fontSize: '1.2rem', fontWeight: 700,
+                  fontFamily: 'Playfair Display, serif'
+                }}>
+                  {item.value}
+                </p>
+                {item.sub && <p style={{ color: '#8a8a9a', fontSize: '0.72rem' }}>{item.sub}</p>}
               </div>
             ))}
           </div>
-          <h2 style={{ color:'white', fontSize:'1.5rem', fontWeight:'bold', marginBottom:'16px' }}>About This Tour</h2>
-          <p style={{ color:'#d1d5db', lineHeight:1.8, fontSize:'1.05rem' }}>{tour.description}</p>
+
+          <h2 style={{
+            fontFamily: 'Playfair Display, serif',
+            color: 'white', fontSize: '1.4rem',
+            fontWeight: 700, marginBottom: '14px'
+          }}>
+            About This Tour
+          </h2>
+          <p style={{ color: '#d1d5db', lineHeight: 1.8, fontSize: '1rem' }}>
+            {tour.description}
+          </p>
+
+          {/* Tour details */}
+          <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {[
+              { icon: '📍', label: 'Location', value: tour.location },
+              { icon: '🏴', label: 'State', value: tour.state },
+              { icon: '⏱', label: 'Duration', value: tour.duration },
+              { icon: '🏷️', label: 'Category', value: tour.category },
+            ].map(item => (
+              <div key={item.label} style={{
+                display: 'flex', justifyContent: 'space-between',
+                padding: '12px 0',
+                borderBottom: '1px solid rgba(255,255,255,0.06)'
+              }}>
+                <span style={{ color: '#8a8a9a', fontSize: '0.88rem' }}>{item.icon} {item.label}</span>
+                <span style={{ color: 'white', fontSize: '0.88rem', fontWeight: 500 }}>{item.value}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Booking Form */}
-        <div style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'20px', padding:'32px' }}>
+        <div style={{
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: '20px', padding: '28px',
+          height: 'fit-content',
+        }}>
           {submitted ? (
-            <div style={{ textAlign:'center', paddingTop:'40px' }}>
-              <div style={{ fontSize:'4rem', marginBottom:'16px' }}>🎉</div>
-              <h3 style={{ color:'white', fontSize:'1.5rem', fontWeight:'bold', marginBottom:'8px' }}>Booking Confirmed!</h3>
-              <p style={{ color:'#9ca3af' }}>We'll contact you at {booking.customer_email}</p>
-              <button onClick={() => navigate('/tours')} style={{ marginTop:'24px', background:'#f97316', color:'white', border:'none', padding:'12px 32px', borderRadius:'999px', fontWeight:'bold', cursor:'pointer' }}>
-                Explore More
+            <div style={{ textAlign: 'center', padding: '40px 0' }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '16px' }}>🎉</div>
+              <h3 style={{
+                fontFamily: 'Playfair Display, serif',
+                color: 'white', fontSize: '1.4rem',
+                fontWeight: 700, marginBottom: '8px'
+              }}>
+                Booking Confirmed!
+              </h3>
+              <p style={{ color: '#8a8a9a', marginBottom: '24px', fontSize: '0.9rem' }}>
+                We'll contact you at {booking.customer_email}
+              </p>
+              <button
+                onClick={() => navigate('/tours')}
+                style={{
+                  background: 'linear-gradient(135deg, #f47c3a, #c9a84c)',
+                  color: 'white', border: 'none',
+                  padding: '12px 32px', borderRadius: '999px',
+                  fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem'
+                }}
+              >
+                Explore More Tours
               </button>
             </div>
           ) : (
             <>
-              <h2 style={{ color:'white', fontSize:'1.4rem', fontWeight:'bold', marginBottom:'24px' }}>Book This Tour</h2>
-              <form onSubmit={handleBooking} style={{ display:'flex', flexDirection:'column', gap:'16px' }}>
-                <input required placeholder="Your Name" value={booking.customer_name} onChange={e => setBooking({...booking, customer_name:e.target.value})} style={inp} />
-                <input required type="email" placeholder="Email Address" value={booking.customer_email} onChange={e => setBooking({...booking, customer_email:e.target.value})} style={inp} />
-                <input placeholder="Phone Number" value={booking.customer_phone} onChange={e => setBooking({...booking, customer_phone:e.target.value})} style={inp} />
-                <input required type="date" value={booking.travel_date} onChange={e => setBooking({...booking, travel_date:e.target.value})} style={inp} />
-                <div style={{ display:'flex', alignItems:'center', gap:'16px' }}>
-                  <label style={{ color:'#9ca3af' }}>People:</label>
-                  <input type="number" min="1" max="20" value={booking.num_people} onChange={e => setBooking({...booking, num_people:parseInt(e.target.value)})} style={{ ...inp, width:'80px' }} />
+              {/* Top accent line */}
+              <div style={{
+                height: '3px', borderRadius: '999px',
+                background: 'linear-gradient(90deg, #f47c3a, #c9a84c)',
+                marginBottom: '24px'
+              }} />
+
+              <h2 style={{
+                fontFamily: 'Playfair Display, serif',
+                color: 'white', fontSize: '1.3rem',
+                fontWeight: 700, marginBottom: '20px'
+              }}>
+                Book This Tour
+              </h2>
+
+              <form onSubmit={handleBooking}>
+                <input
+                  required placeholder="Your Full Name"
+                  value={booking.customer_name}
+                  onChange={e => setBooking({ ...booking, customer_name: e.target.value })}
+                  style={inp}
+                />
+                <input
+                  required type="email" placeholder="Email Address"
+                  value={booking.customer_email}
+                  onChange={e => setBooking({ ...booking, customer_email: e.target.value })}
+                  style={inp}
+                />
+                <input
+                  placeholder="Phone Number"
+                  value={booking.customer_phone}
+                  onChange={e => setBooking({ ...booking, customer_phone: e.target.value })}
+                  style={inp}
+                />
+                <input
+                  required type="date"
+                  value={booking.travel_date}
+                  onChange={e => setBooking({ ...booking, travel_date: e.target.value })}
+                  style={{ ...inp, colorScheme: 'dark' }}
+                />
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                  <span style={{ color: '#8a8a9a', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
+                    Number of People:
+                  </span>
+                  <input
+                    type="number" min="1" max="20"
+                    value={booking.num_people}
+                    onChange={e => setBooking({ ...booking, num_people: parseInt(e.target.value) })}
+                    style={{ ...inp, width: '80px', marginBottom: 0, textAlign: 'center' }}
+                  />
                 </div>
-                <div style={{ background:'rgba(249,115,22,0.15)', borderRadius:'12px', padding:'16px' }}>
-                  <p style={{ color:'#f97316', fontWeight:'bold', fontSize:'1.1rem' }}>
-                    Total: ₹{(Number(tour.price) * booking.num_people).toLocaleString()}
-                  </p>
+
+                {/* Total price */}
+                <div style={{
+                  background: 'rgba(244,124,58,0.1)',
+                  border: '1px solid rgba(244,124,58,0.2)',
+                  borderRadius: '12px', padding: '14px 16px',
+                  marginBottom: '16px',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                }}>
+                  <span style={{ color: '#8a8a9a', fontSize: '0.9rem' }}>Total Amount</span>
+                  <span style={{
+                    fontFamily: 'Playfair Display, serif',
+                    color: '#f47c3a', fontSize: '1.4rem', fontWeight: 800
+                  }}>
+                    ₹{(Number(tour.price) * booking.num_people).toLocaleString()}
+                  </span>
                 </div>
-                <button type="submit" style={{ background:'#f97316', color:'white', border:'none', padding:'16px', borderRadius:'12px', fontWeight:'bold', fontSize:'1.05rem', cursor:'pointer' }}>
+
+                <button
+                  type="submit"
+                  style={{
+                    width: '100%',
+                    background: 'linear-gradient(135deg, #f47c3a, #c9a84c)',
+                    color: 'white', border: 'none',
+                    padding: '15px', borderRadius: '12px',
+                    fontWeight: 700, fontSize: '1rem',
+                    cursor: 'pointer',
+                    boxShadow: '0 8px 24px rgba(244,124,58,0.3)',
+                  }}
+                >
                   Confirm Booking 🎯
                 </button>
               </form>

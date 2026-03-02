@@ -25,33 +25,43 @@ export default function Tours() {
   const categories = ['All', 'Heritage', 'Nature', 'Beach', 'Adventure', 'Spiritual']
 
   return (
-    <div style={{ minHeight: '100vh', background: '#06080f', paddingTop: '100px' }}>
+    <div style={{ minHeight: '100vh', background: '#06080f', paddingTop: '68px' }}>
+      <style>{`
+        .tours-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+        .search-row { display: flex; gap: 12px; }
+        .filter-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+        @media (max-width: 640px) {
+          .tours-grid { grid-template-columns: 1fr !important; }
+          .tours-header { padding: 28px 16px 20px !important; }
+          .search-row { flex-direction: column !important; }
+          .tours-container { padding: 24px 16px !important; }
+          .tours-title { font-size: 2rem !important; }
+        }
+      `}</style>
 
-      {/* Page Header */}
-      <div style={{
-        textAlign: 'center', padding: '60px 48px 40px',
+      {/* Header */}
+      <div className="tours-header" style={{
+        textAlign: 'center', padding: '48px 32px 32px',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
         position: 'relative'
       }}>
-        {/* Background glow */}
         <div style={{
           position: 'absolute', top: '50%', left: '50%',
           transform: 'translate(-50%,-50%)',
           width: '600px', height: '200px',
-          background: 'radial-gradient(ellipse, rgba(244,124,58,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(244,124,58,0.1) 0%, transparent 70%)',
           pointerEvents: 'none'
         }} />
-
         <p style={{
           color: '#f47c3a', fontSize: '0.78rem', fontWeight: 600,
-          letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '16px'
+          letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '14px'
         }}>
           ✦ Explore India
         </p>
-        <h1 style={{
+        <h1 className="tours-title" style={{
           fontFamily: 'Playfair Display, serif',
-          fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-          fontWeight: 800, color: 'white', marginBottom: '16px'
+          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+          fontWeight: 800, color: 'white', marginBottom: '12px'
         }}>
           Find Your Perfect{' '}
           <span style={{
@@ -61,23 +71,23 @@ export default function Tours() {
             Adventure
           </span>
         </h1>
-        <p style={{ color: '#8a8a9a', fontSize: '1.05rem', maxWidth: '480px', margin: '0 auto' }}>
+        <p style={{ color: '#8a8a9a', fontSize: '1rem', maxWidth: '480px', margin: '0 auto' }}>
           Handpicked journeys across India's most breathtaking destinations
         </p>
       </div>
 
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '48px 32px' }}>
+      <div className="tours-container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px 24px' }}>
 
-        {/* Search + Filter Row */}
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+        {/* Search Row */}
+        <div className="search-row" style={{ marginBottom: '20px' }}>
           <div style={{
-            flex: 1, minWidth: '280px',
+            flex: 1,
             display: 'flex', alignItems: 'center', gap: '12px',
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '999px', padding: '4px 20px',
           }}>
-            <span style={{ color: '#8a8a9a', fontSize: '1rem' }}>🔍</span>
+            <span style={{ color: '#8a8a9a' }}>🔍</span>
             <input
               placeholder="Search destinations, states..."
               value={search}
@@ -86,8 +96,7 @@ export default function Tours() {
               style={{
                 flex: 1, background: 'transparent',
                 border: 'none', outline: 'none',
-                color: 'white', fontSize: '0.95rem',
-                padding: '12px 0',
+                color: 'white', fontSize: '0.95rem', padding: '12px 0',
               }}
             />
           </div>
@@ -96,9 +105,10 @@ export default function Tours() {
             style={{
               background: 'linear-gradient(135deg, #f47c3a, #c9a84c)',
               color: 'white', fontWeight: 600,
-              padding: '14px 32px', borderRadius: '999px',
+              padding: '14px 28px', borderRadius: '999px',
               fontSize: '0.95rem', border: 'none', cursor: 'pointer',
               boxShadow: '0 4px 20px rgba(244,124,58,0.3)',
+              whiteSpace: 'nowrap',
             }}
           >
             Search
@@ -106,7 +116,7 @@ export default function Tours() {
         </div>
 
         {/* Category Pills */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '48px', flexWrap: 'wrap' }}>
+        <div className="filter-pills" style={{ marginBottom: '36px' }}>
           {categories.map(cat => {
             const active = (cat === 'All' && !category) || cat === category
             return (
@@ -114,8 +124,8 @@ export default function Tours() {
                 key={cat}
                 onClick={() => setCategory(cat === 'All' ? '' : cat)}
                 style={{
-                  padding: '8px 22px', borderRadius: '999px',
-                  fontSize: '0.88rem', fontWeight: 500,
+                  padding: '8px 20px', borderRadius: '999px',
+                  fontSize: '0.85rem', fontWeight: 500,
                   cursor: 'pointer', transition: 'all 0.2s',
                   border: '1px solid',
                   borderColor: active ? '#f47c3a' : 'rgba(255,255,255,0.1)',
@@ -131,21 +141,21 @@ export default function Tours() {
 
         {/* Results count */}
         {!loading && (
-          <p style={{ color: '#8a8a9a', fontSize: '0.88rem', marginBottom: '32px' }}>
+          <p style={{ color: '#8a8a9a', fontSize: '0.85rem', marginBottom: '28px' }}>
             Showing <span style={{ color: 'white', fontWeight: 600 }}>{tours.length}</span> tours
             {category && <span> in <span style={{ color: '#f47c3a' }}>{category}</span></span>}
           </p>
         )}
 
-        {/* Tours Grid with Flip Cards */}
+        {/* Tours Grid */}
         {loading ? (
           <div style={{
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
-            paddingTop: '100px', gap: '16px'
+            paddingTop: '80px', gap: '16px'
           }}>
             <div style={{
-              width: '48px', height: '48px', borderRadius: '50%',
+              width: '44px', height: '44px', borderRadius: '50%',
               border: '3px solid rgba(244,124,58,0.2)',
               borderTopColor: '#f47c3a',
               animation: 'spin 1s linear infinite'
@@ -159,11 +169,7 @@ export default function Tours() {
             <p style={{ color: '#8a8a9a', fontSize: '1.1rem' }}>No tours found. Try a different search!</p>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-            gap: '28px'
-          }}>
+          <div className="tours-grid" style={{ display: 'grid', gap: '24px' }}>
             {tours.map(tour => (
               <FlipCard3D key={tour.id} tour={tour} />
             ))}
