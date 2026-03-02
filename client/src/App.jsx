@@ -5,7 +5,8 @@ import Tours from './pages/Tours'
 import TourDetail from './pages/TourDetail'
 import Admin from './pages/Admin'
 import MapExplorer from './pages/MapExplorer'
-
+import Analytics from './pages/Analytics'
+<Route path="/analytics" element={<Analytics />} />
 export default function App() {
   return (
     <BrowserRouter>
